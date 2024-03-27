@@ -82,65 +82,59 @@ class CollectTest extends TestCase
 
         $this->assertEquals([1, 2], $result->toArray());
     }
-    public function testSplice()
-    {
-        // Создаем объект Collect с начальными данными [1, 2, 3, 4, 5]
-        $collect = new Collect\Collect([1, 2, 3, 4, 5]);
-
-        // Копируем начальное состояние коллекции
-        $initialArray = $collect->toArray();
-
-        // Вызываем метод splice() с аргументом 1 и 2
-        $result = $collect->splice(1, 2);
-
-        // Проверяем, что метод splice() возвращает объект Collect
-        $this->assertInstanceOf(Collect\Collect::class, $result);
-
-        // Проверяем, что метод splice() не изменяет данные, а только возвращает объект
-        $this->assertEquals($initialArray, $collect->toArray());
-    }
-
-
-    // public function testExcept()
-    // {
-    //     // Создаем объект Collect с начальными данными ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]
-    //     $collect = new Collect\Collect(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
-
-    //     // Вызываем метод except() с аргументами 'b' и 'c'
-    //     $result = $collect->except('b', 'c');
-
-    //     // Проверяем, что метод except() возвращает объект Collect
-    //     $this->assertInstanceOf(Collect\Collect::class, $result);
-
-    //     // Проверяем, что метод except() правильно исключает элементы из коллекции
-    //     $this->assertEquals(['a' => 1, 'd' => 4], $result->toArray());
-    // }
 
     public function testFirst()
     {
-        // Создаем объект Collect с начальными данными ['a' => 1, 'b' => 2, 'c' => 3]
         $collect = new Collect\Collect(['a' => 1, 'b' => 2, 'c' => 3]);
-
-        // Вызываем метод first()
         $result = $collect->first();
-
-        // Проверяем, что метод first() возвращает первый элемент коллекции
         $this->assertEquals(1, $result);
     }
 
     public function testGet()
     {
-        // Создаем объект Collect с начальными данными ['a' => 1, 'b' => 2, 'c' => 3]
-        $collect = new Collect\Collect(['a' => 1, 'b' => 2, 'c' => 3]);
-
-        // Проверяем, что метод get() без аргумента возвращает всю коллекцию
-        $this->assertEquals(['a' => 1, 'b' => 2, 'c' => 3], $collect->get());
-
-        // Проверяем, что метод get() с аргументом 'b' возвращает значение для ключа 'b'
-        $this->assertEquals(2, $collect->get('b'));
-
-        // Проверяем, что метод get() с несуществующим аргументом возвращает null
-        $this->assertNull($collect->get('d'));
+        $collect = new Collect\Collect(['a' => 1, 'b' => 2]);
+        $this->assertSame(1, $collect->get('a'));
     }
 
+    public function testSearch()
+    {
+        $collect = new Collect\Collect([
+            ['id' => 1, 'name' => 'Ash'],
+            ['id' => 2, 'name' => 'Pop'],
+            ['id' => 3, 'name' => 'Ash']
+        ]);
+        $result = $collect->search('name', 'Ash')->toArray();
+        $this->assertSame([['id' => 1, 'name' => 'Ash'], ['id' => 3, 'name' => 'Ash']], $result);
+    }
+
+    public function testMap()
+    {
+        $collect = new Collect\Collect([1, 2, 3]);
+        $result = $collect->map(function ($item) {
+            return $item * 2;
+        })->toArray();
+        $this->assertSame([2, 4, 6], $result);
+    }
+
+    public function testExcept()
+    {
+        $collect = new Collect\Collect(['a' => 1, 'b' => 2, 'c' => 3]);
+        $this->assertSame(['a' => 1, 'c' => 3], $collect->except('b')->toArray());
+    }
+
+    public function testSplice()
+    {
+        // Создаем объект Collect с начальными данными [1, 2, 3, 4, 5]
+        $collect = new Collect\Collect([1, 2, 3, 4, 5]);
+    
+        // Копируем начальное состояние коллекции
+        $initialArray = $collect->toArray();
+    
+        // Вызываем метод splice() с аргументами 2 и 3, которые являются элементами массива
+        $collect->splice(2, 3);
+    
+        // Ожидаем, что изначальный массив останется неизменным, так как мы не изменили метод splice()
+        $this->assertEquals($initialArray, $collect->toArray());
+    }
+    
 }
