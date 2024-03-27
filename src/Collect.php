@@ -71,7 +71,7 @@ class Collect
         return new self(array_map($callback, $this->array));
     }
 
-    //3
+   
     public function filter(callable $callback): Collect
     {
         return new self(array_filter($this->array, $callback));
@@ -121,4 +121,6 @@ class Collect
         array_splice($idx, $length);
         return $this;
     }
+
+    
 }
