@@ -124,16 +124,10 @@ class CollectTest extends TestCase
 
     public function testSplice()
     {
-        // Создаем объект Collect с начальными данными [1, 2, 3, 4, 5]
+        
         $collect = new Collect\Collect([1, 2, 3, 4, 5]);
-    
-        // Копируем начальное состояние коллекции
         $initialArray = $collect->toArray();
-    
-        // Вызываем метод splice() с аргументами 2 и 3, которые являются элементами массива
         $collect->splice(2, 3);
-    
-        // Ожидаем, что изначальный массив останется неизменным, так как мы не изменили метод splice()
         $this->assertEquals($initialArray, $collect->toArray());
     }
     
